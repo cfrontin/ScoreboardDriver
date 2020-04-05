@@ -15,6 +15,7 @@ from rgbmatrix import graphics;
 
 # configuration for the matrix: options for my board
 options= RGBMatrixOptions();
+options.brightness= 50;
 options.rows= 32;
 options.cols= 64;
 options.chain_length= 1;
@@ -75,10 +76,13 @@ def textscroll(matrix, canvas):
 # a fun noise example
 
 def noisy(matrix, canvas):
-    # infinite loop
-    for j in range(1000):
 
-        # do 100 points at a time
+    canvas.Clear();
+    canvas= matrix.CreateFrameCanvas();
+
+    # infinite loop
+    for j in range(100):
+
         for i in range(100):
 
             # pick a random spot on the matrix
@@ -94,10 +98,9 @@ def noisy(matrix, canvas):
             # set the pixel
             canvas.SetPixel(x, y, r, g, b);
 
-        # time.sleep(0.005);
-
         # swap the canvas in to the screen
-        canvas= matrix.SwapOnVSync(canvas);
+        matrix.SwapOnVSync(canvas);
+        time.sleep(0.01);
 
 # print the daily readings
 
@@ -137,8 +140,8 @@ def fetch_readings():
             'songofsongs': "Song of Songs",
             'wisdom': "Wisdom",
             'sirach': "Sirach",
-            'isaiah': "isaiah",
-            'jeremiah': "jeremiah",
+            'isaiah': "Isaiah",
+            'jeremiah': "Jeremiah",
             'lamentations': "Lamentations",
             'baruch': "Baruch",
             'ezekiel': "Ezekiel",
@@ -192,20 +195,26 @@ def fetch_readings():
 
     # function to process a scaped item
     def process_brw(wrapper):
+
+        print("\nwrapper:\n")
+        print(wrapper);
+
         text= wrapper.find('h4').find('a').text;
         href= wrapper.find('h4').find('a')['href'];
 
-        href= href.split('/bible/')[1];
+        # href= href.split('/bible/readings')[-1];
+        href= href.split('/bible/')[-1];
 
-        book= booknames[href.split('/')[0]];
+        print(text);
+        print(href);
+
+        book= booknames[href.split('/')[0].lower()];
         chapter= href.split('/')[1].split(':')[0];
-        verse= text.split(':')[1];
+        verse= href.split('/')[1].split(':')[1];
 
-        # print(text);
-        # print(book);
-        # print(chapter);
-        # print(verse);
-        # print(href);
+        print(book);
+        print(chapter);
+        print(verse);
 
         return {'book': book, 'chapter': chapter, 'verse': verse};
 
@@ -298,7 +307,7 @@ def readings_pager(matrix, canvas):
     scrolltime= 0.25;
 
     # the position we start at: edge of the screen
-    x_text= 0;
+    x_text= 3;
     y_text= 7;
 
     # get and load a font
@@ -444,7 +453,7 @@ def readings_pager(matrix, canvas):
 ### MAIN LOOP
 
 # pages= [noisy, textscroll];
-pages= [readings_pager,];
+pages= [noisy, readings_pager,];
 # pages= [readings_scroller,];
 
 debug_counter= 0;
@@ -453,11 +462,11 @@ debug_count= 1;
 while True:
     for page in pages:
         page(matrix, canvas);
+        # clear old canvas to prevent weird stuff
+        canvas.Clear();
+        canvas= matrix.CreateFrameCanvas();
 
-    # clear old canvas to prevent weird stuff
-    canvas= matrix.CreateFrameCanvas();
-
-    # for now, just cycle through
-    debug_counter += 1;
-    if debug_counter >= debug_count:
-        break;
+    # # for now, just cycle through
+    # debug_counter += 1;
+    # if debug_counter >= debug_count:
+    #     break;

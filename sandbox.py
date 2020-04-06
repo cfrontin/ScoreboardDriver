@@ -26,6 +26,16 @@ options.hardware_mapping= 'adafruit-hat';
 matrix= RGBMatrix(options= options);
 canvas= matrix.CreateFrameCanvas();
 
+# some sexy colors
+def colorset():
+    set= [];
+    set.append('r': 7, 'g': 15, 'b': 25);
+    set.append('r': 255, 'g': 235, 'b': 59);
+    set.append('r': 155, 'g': 41, 'b': 21);
+    set.append('r': 36, 'g': 30, 'b': 78);
+    set.append('r': 8, 'g': 160, 'b': 69);
+    return set;
+
 # a text scrolling example
 
 def textscroll(matrix, canvas):
@@ -237,25 +247,29 @@ def fetch_readings():
 
 def jesus(matrix, canvas):
 
-    canvas.Fill(7, 15, 25);
+    canvas.Clear();
 
+    # open the file with the picture
     image= Image.open('img/jesus_is_cool.jpg');
     (img_width, img_height)= image.size;
 
+    # convert to fit the thing
     image= image.resize((matrix.width,
             math.floor(img_height/img_width*matrix.width)), Image.ANTIALIAS);
     (img_width, img_height)= image.size;
 
+    # position
     x_img= 0;
     y_img= 0;
 
-    N_img= 100;
+    # scroll presets
     delta= +1;
     passed= False;
 
-    for i in range(N_img):
+    # loop
+    while True:
         canvas.SetImage(image, x_img, -y_img);
-        canvas.SetImage(image, x_img, -y_img + img_height);
+        # canvas.SetImage(image, x_img, -y_img + img_height);
 
         canvas= matrix.SwapOnVSync(canvas);
         time.sleep(0.1);
@@ -344,9 +358,10 @@ def readings_pager(matrix, canvas):
     # colors
     c_bg= {'r': 7, 'g': 15, 'b': 25};
     c_text= {'r': 255, 'g': 235, 'b': 59};
+    c_head= {'r': 155, 'g': 41, 'b': 21};
 
     # scroll timer
-    sleeptime= 10.0;
+    sleeptime= 5.0;
     scrolltime= 0.25;
 
     # the position we start at: edge of the screen
@@ -365,6 +380,7 @@ def readings_pager(matrix, canvas):
 
     # get color
     textColor= graphics.Color(c_text['r'], c_text['g'], c_text['b']);
+    headColor= graphics.Color(c_head['r'], c_head['g'], c_head['b']);
 
     # fetch readings
     readings= fetch_readings();
@@ -386,7 +402,7 @@ def readings_pager(matrix, canvas):
 
             # draw the desired text
             graphics.DrawText(canvas, font_head,
-                    x_text + 0.0*hskip, y_text + 0.0*vskip, textColor,
+                    x_text + 0.0*hskip, y_text + 0.0*vskip, headColor,
                     header);
 
             # draw the desired text
@@ -398,10 +414,11 @@ def readings_pager(matrix, canvas):
                     y_text + 2.0*vskip, textColor,
                     reading['chapter'] + ":" + reading['verse']);
 
+            # scroll on, flag if it should keep scrolling after
             offset -= 1;
             keep_scrolling= x_text + 2.0*hskip + offset + len_txt > matrix.width;
 
-            # swap, pause, then clear the canvas
+            # swap, then pause
             canvas= matrix.SwapOnVSync(canvas);
             time.sleep(scrolltime);
 
@@ -417,84 +434,6 @@ def readings_pager(matrix, canvas):
     else:
         do_reading(canvas, "Gospel:", readings[2]);
 
-    # # draw the desired text
-    # graphics.DrawText(canvas, font_head,
-    #         x_text + 0.0*hskip, y_text + 0.0*vskip, textColor,
-    #         "First reading:");
-    #
-    # # draw the desired text
-    # graphics.DrawText(canvas, font_read,
-    #         x_text + 1.0*hskip, y_text + 1.0*vskip, textColor,
-    #         readings[0]['book']);
-    # len_txt= graphics.DrawText(canvas, font_read,
-    #         x_text + 2.0*hskip, y_text + 2.0*vskip, textColor,
-    #         readings[0]['chapter'] + ":" + readings[0]['verse']);
-    #
-    # # swap, pause, then clear the canvas
-    # canvas= matrix.SwapOnVSync(canvas);
-    # time.sleep(sleeptime);
-    # canvas.Clear();
-
-    # # draw the desired text
-    # graphics.DrawText(canvas, font_head,
-    #         x_text + 0.0*hskip, y_text + 0.0*vskip, textColor,
-    #         "Responsorial:");
-    #
-    # graphics.DrawText(canvas, font_read,
-    #         x_text + 1.0*hskip, y_text + 1.0*vskip, textColor,
-    #         readings[1]['book']);
-    # graphics.DrawText(canvas, font_read,
-    #         x_text + 2.0*hskip, y_text + 2.0*vskip, textColor,
-    #         readings[1]['chapter'] + ":" + readings[1]['verse']);
-    #
-    # # swap, pause, then clear the canvas
-    # canvas= matrix.SwapOnVSync(canvas);
-    # time.sleep(sleeptime);
-    # canvas.Clear();
-
-    # # draw the desired text
-    # graphics.DrawText(canvas, font_head,
-    #         x_text + 0.0*hskip, y_text + 0.0*vskip, textColor,
-    #         "2nd reading:");
-    #
-    # vskip= math.floor(1.5*font_read.height);
-    # hskip= math.floor(0.5*font_read.height);
-    #
-    # graphics.DrawText(canvas, font_read,
-    #         x_text + 1.0*hskip, y_text + 1.0*vskip, textColor,
-    #         readings[2]['book']);
-    # graphics.DrawText(canvas, font_read,
-    #         x_text + 2.0*hskip, y_text + 2.0*vskip, textColor,
-    #         readings[2]['chapter'] + ":" + readings[2]['verse']);
-
-    # if len(readings) > 3:
-    #
-    #     # swap, pause, then clear the canvas
-    #     canvas= matrix.SwapOnVSync(canvas);
-    #     time.sleep(sleeptime);
-    #     canvas.Clear();
-    #
-    #     # clear the canvas
-    #     canvas.Clear();
-    #
-    #     # draw the desired text
-    #     graphics.DrawText(canvas, font_head,
-    #             x_text + 0.0*hskip, y_text + 0.0*vskip, textColor,
-    #             "Daily gospel:");
-    #
-    #     graphics.DrawText(canvas, font_read,
-    #             x_text + 1.0*hskip, y_text + 1.0*vskip, textColor,
-    #             readings[3]['book']);
-    #     graphics.DrawText(canvas, font_read,
-    #             x_text + 2.0*hskip, y_text + 2.0*vskip, textColor,
-    #             readings[3]['chapter'] + ":" + readings[3]['verse']);
-    #
-    # # swap, pause, then clear the canvas
-    # canvas= matrix.SwapOnVSync(canvas);
-    # time.sleep(sleeptime);
-    # canvas.Clear();
-
-
 ### MAIN LOOP
 
 # pages= [noisy, textscroll];
@@ -509,8 +448,6 @@ while True:
     for page in pages:
         page(matrix, canvas);
         # clear old canvas to prevent weird stuff
-        canvas.Clear();
-        canvas= matrix.CreateFrameCanvas();
 
     # # for now, just cycle through
     # debug_counter += 1;

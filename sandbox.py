@@ -7,11 +7,11 @@ import sys;
 import requests;
 from bs4 import BeautifulSoup;
 
+from PIL import Image;
+
 from rgbmatrix import RGBMatrix;
 from rgbmatrix import RGBMatrixOptions;
 from rgbmatrix import graphics;
-
-# setup
 
 # configuration for the matrix: options for my board
 options= RGBMatrixOptions();
@@ -196,8 +196,8 @@ def fetch_readings():
     # function to process a scaped item
     def process_brw(wrapper):
 
-        print("\nwrapper:\n")
-        print(wrapper);
+        # print("\nwrapper:\n")
+        # print(wrapper);
 
         text= wrapper.find('h4').find('a').text;
         href= wrapper.find('h4').find('a')['href'];
@@ -205,16 +205,16 @@ def fetch_readings():
         # href= href.split('/bible/readings')[-1];
         href= href.split('/bible/')[-1];
 
-        print(text);
-        print(href);
+        # print(text);
+        # print(href);
 
         book= booknames[href.split('/')[0].lower()];
         chapter= href.split('/')[1].split(':')[0];
         verse= href.split('/')[1].split(':')[1];
 
-        print(book);
-        print(chapter);
-        print(verse);
+        # print(book);
+        # print(chapter);
+        # print(verse);
 
         return {'book': book, 'chapter': chapter, 'verse': verse};
 
@@ -234,6 +234,45 @@ def fetch_readings():
         if reading is not None:
             readings.append(reading);
     return readings;
+
+def jesus(matrix, canvas):
+
+    canvas.Fill(7, 15, 25);
+
+    image= Image.open('img/jesus_is_cool.jpg');
+    (img_width, img_height)= image.size;
+
+    image= image.resize((matrix.width,
+            math.floor(img_height/img_width*matrix.width)), Image.ANTIALIAS);
+    (img_width, img_height)= image.size;
+
+    x_img= 0;
+    y_img= 0;
+
+    N_img= 100;
+    delta= +1;
+    passed= False;
+
+    for i in range(N_img):
+        canvas.SetImage(image, x_img, -y_img);
+        canvas.SetImage(image, x_img, -y_img + img_height);
+
+        canvas= matrix.SwapOnVSync(canvas);
+        time.sleep(0.1);
+
+        y_img += delta;
+
+        if y_img > (img_height - matrix.height):
+            delta= -1;
+
+        if y_img < 8:
+            if (delta < 0):
+                if passed:
+                    passed= True;
+                else:
+                    break;
+
+    time.sleep(1.0);
 
 def readings_scroller(matrix, canvas):
 
@@ -302,6 +341,10 @@ def readings_scroller(matrix, canvas):
 
 def readings_pager(matrix, canvas):
 
+    # colors
+    c_bg= {'r': 7, 'g': 15, 'b': 25};
+    c_text= {'r': 255, 'g': 235, 'b': 59};
+
     # scroll timer
     sleeptime= 10.0;
     scrolltime= 0.25;
@@ -321,13 +364,14 @@ def readings_pager(matrix, canvas):
     font_read.LoadFont("/home/pi/rpi-rgb-led-matrix/fonts/tom-thumb.bdf");
 
     # get color
-    textColor= graphics.Color(000, 153, 255);
+    textColor= graphics.Color(c_text['r'], c_text['g'], c_text['b']);
 
     # fetch readings
     readings= fetch_readings();
 
     # clear the canvas
     canvas.Clear();
+    canvas.Fill(c_bg['r'], c_bg['g'], c_bg['b']);
 
     def do_reading(canvas, header, reading):
 
@@ -338,6 +382,7 @@ def readings_pager(matrix, canvas):
 
             # clear the canvas
             canvas.Clear();
+            canvas.Fill(c_bg['r'], c_bg['g'], c_bg['b']);
 
             # draw the desired text
             graphics.DrawText(canvas, font_head,
@@ -453,7 +498,8 @@ def readings_pager(matrix, canvas):
 ### MAIN LOOP
 
 # pages= [noisy, textscroll];
-pages= [noisy, readings_pager,];
+pages= [noisy, jesus, readings_pager,];
+# pages= [jesus, readings_pager,];
 # pages= [readings_scroller,];
 
 debug_counter= 0;

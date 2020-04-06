@@ -29,11 +29,11 @@ canvas= matrix.CreateFrameCanvas();
 # some sexy colors
 def colorset():
     set= [];
-    set.append('r': 7, 'g': 15, 'b': 25);
-    set.append('r': 255, 'g': 235, 'b': 59);
-    set.append('r': 155, 'g': 41, 'b': 21);
-    set.append('r': 36, 'g': 30, 'b': 78);
-    set.append('r': 8, 'g': 160, 'b': 69);
+    set.append({'r': 7, 'g': 15, 'b': 25});
+    set.append({'r': 255, 'g': 235, 'b': 59});
+    set.append({'r': 155, 'g': 41, 'b': 21});
+    set.append({'r': 36, 'g': 30, 'b': 78});
+    set.append({'r': 8, 'g': 160, 'b': 69});
     return set;
 
 # a text scrolling example

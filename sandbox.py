@@ -13,6 +13,9 @@ from rgbmatrix import RGBMatrix;
 from rgbmatrix import RGBMatrixOptions;
 from rgbmatrix import graphics;
 
+sys.path.append("./mlbledscoreboard/");
+from renderers.main import MainRenderer;
+
 # configuration for the matrix: options for my board
 options= RGBMatrixOptions();
 options.brightness= 50;
@@ -433,6 +436,10 @@ def readings_pager(matrix, canvas):
         do_reading(canvas, "Gospel:", readings[3]);
     else:
         do_reading(canvas, "Gospel:", readings[2]);
+
+def mlbled_offday(matrix, canvas):
+
+    print("Hello, world!");
 
 ### MAIN LOOP
 

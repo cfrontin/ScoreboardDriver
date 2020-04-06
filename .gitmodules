@@ -1,0 +1,3 @@
+[submodule "mlb-led-scoreboard"]
+	path = mlb-led-scoreboard
+	url = https://github.com/MLB-LED-Scoreboard/mlb-led-scoreboard.git

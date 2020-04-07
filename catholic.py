@@ -126,7 +126,7 @@ def fetch_readings_api():
         for bk_key in booknames.keys():
             if reading_data['readings'][rd_ky].startswith(bk_key):
                 book= booknames[bk_key];
-                chapverse= reading_data['readings'][rd_ky][(len(bk_key) + 1):];
+                chapverse= reading_data['readings'][rd_ky][(len(bk_key) + 1):].replace('AND', 'and');
                 swapped= True;
                 break;
         if not swapped:
@@ -277,7 +277,7 @@ def readings_pager(matrix, canvas):
 
             # scroll on, flag if it should keep scrolling after
             offset -= 1;
-            keep_scrolling= y_title + (i + 2)*vskip + offset > matrix.width;
+            keep_scrolling= y_title + (i + 2)*vskip + offset > matrix.width - buffer;
 
             # swap, then pause
             canvas= matrix.SwapOnVSync(canvas);
@@ -334,7 +334,7 @@ def readings_pager(matrix, canvas):
 
             # scroll on, flag if it should keep scrolling after
             offset -= 1;
-            keep_scrolling= x_text + 2.0*hskip + offset + len_txt > matrix.width;
+            keep_scrolling= x_text + 2.0*hskip + offset + len_txt > matrix.width - buffer;
 
             # swap, then pause
             canvas= matrix.SwapOnVSync(canvas);

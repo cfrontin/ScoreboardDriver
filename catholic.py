@@ -232,10 +232,62 @@ def readings_pager(matrix, canvas):
         c_text= {'r': 255, 'g': 253, 'b': 158};
         c_head= {'r': 155, 'g': 41, 'b': 21};
 
-
     # scroll timer
     sleeptime= 5.0;
     scrolltime= 0.25;
+
+    # get color
+    textColor= graphics.Color(c_text['r'], c_text['g'], c_text['b']);
+    headColor= graphics.Color(c_head['r'], c_head['g'], c_head['b']);
+
+    # get and load a font
+    font_title= graphics.Font();
+    font_title.LoadFont("/home/pi/rpi-rgb-led-matrix/fonts/5x8.bdf");
+    vskip= math.floor(1.5*font_title.height);
+    hskip= math.floor(0.5*font_title.height);
+
+    # the position we start at: edge of the screen
+    x_title= 3;
+    y_title= 12;
+
+    buffer= 3;
+
+    numchars= math.floor((matrix.width - 2*buffer)/6);
+    title_printable= textwrap.wrap(title, numchars);
+
+    def do_title(canvas, lines):
+
+        keep_scrolling= True;
+        offset= 0;
+
+        while keep_scrolling:
+
+            # clear the canvas
+            canvas.Clear();
+            canvas.Fill(c_bg['r'], c_bg['g'], c_bg['b']);
+
+            i= 0;
+
+            for line in lines:
+                # draw the desired text
+                graphics.DrawText(canvas, font_title,
+                        x_title + 1.0*hskip, y_title + i*vskip + offset,
+                        textColor, line);
+                i += 1;
+
+            # scroll on, flag if it should keep scrolling after
+            offset -= 1;
+            keep_scrolling= y_title + (i + 2)*vskip + offset > matrix.width;
+
+            # swap, then pause
+            canvas= matrix.SwapOnVSync(canvas);
+            time.sleep(scrolltime);
+
+        # swap, pause, then clear the canvas
+        time.sleep(sleeptime - scrolltime);
+        canvas.Clear();
+
+    do_title(canvas, title_printable);
 
     # the position we start at: edge of the screen
     x_text= 3;
@@ -250,10 +302,6 @@ def readings_pager(matrix, canvas):
     # get and load a font
     font_read= graphics.Font();
     font_read.LoadFont("/home/pi/rpi-rgb-led-matrix/fonts/tom-thumb.bdf");
-
-    # get color
-    textColor= graphics.Color(c_text['r'], c_text['g'], c_text['b']);
-    headColor= graphics.Color(c_head['r'], c_head['g'], c_head['b']);
 
     # clear the canvas
     canvas.Clear();

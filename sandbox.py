@@ -89,7 +89,7 @@ def noisy(matrix, canvas):
     canvas= matrix.CreateFrameCanvas();
 
     # infinite loop
-    for j in range(100):
+    for j in range(1000):
 
         for i in range(100):
 

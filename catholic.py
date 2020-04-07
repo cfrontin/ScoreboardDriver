@@ -194,7 +194,7 @@ def jesus(matrix, canvas):
                 else:
                     break;
 
-    time.sleep(1.0);
+    time.sleep(4.0);
 
 def readings_pager(matrix, canvas):
 
@@ -233,8 +233,8 @@ def readings_pager(matrix, canvas):
         c_head= {'r': 155, 'g': 41, 'b': 21};
 
     # scroll timer
-    sleeptime= 5.0;
-    scrolltime= 0.25;
+    sleeptime= 10.0;
+    scrolltime= 0.5;
 
     # get color
     textColor= graphics.Color(c_text['r'], c_text['g'], c_text['b']);

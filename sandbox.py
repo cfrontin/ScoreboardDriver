@@ -117,10 +117,10 @@ def mlbled_offday(matrix, canvas):
 ### MAIN LOOP
 
 # pages= [noisy, textscroll];
-# pages= [noisy, jesus, readings_pager,];
+pages= [noisy, jesus, readings_pager,];
 # pages= [jesus, readings_pager,];
 # pages= [readings_scroller,];
-pages= [readings_pager,];
+# pages= [readings_pager,];
 
 debug_counter= 0;
 debug_count= 1;

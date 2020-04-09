@@ -13,7 +13,7 @@ from catholic import readings_pager;
 
 # configuration for the matrix: options for my board
 options= RGBMatrixOptions();
-options.brightness= 50;
+options.brightness= 20;
 options.rows= 32;
 options.cols= 64;
 options.chain_length= 1;

@@ -126,7 +126,10 @@ def fetch_readings_api():
         for bk_key in booknames.keys():
             if reading_data['readings'][rd_ky].startswith(bk_key):
                 book= booknames[bk_key];
-                chapverse= reading_data['readings'][rd_ky][(len(bk_key) + 1):].replace('AND', 'and');
+                if reading_data['readings'][rd_ky][(len(bk_key) + 1):].count(' ') < 2:
+                    chapverse= reading_data['readings'][rd_ky][(len(bk_key) + 1):].replace('AND', 'and');
+                else:
+                    chapverse= reading_data['readings'][rd_ky][(len(bk_key) + 1):].replace(' AND', ', and');
                 swapped= True;
                 break;
         if not swapped:

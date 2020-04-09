@@ -151,11 +151,7 @@ def fetch_readings_api():
 
 def fetch_readings():
     # return fetch_readings_scrape()[0];
-    # return fetch_readings_api();
-    # DEBUG!
-    results= fetch_readings_api();
-    results[1]= "Good Friday";
-    return results;
+    return fetch_readings_api();
 
 def jesus(matrix, canvas):
 
@@ -164,7 +160,7 @@ def jesus(matrix, canvas):
     (readings, title, season)= fetch_readings();
 
     # open the file with the picture
-    if "good friday" is in title.lower():
+    if "good friday" in title.lower():
         image= Image.open('img/jesus_is_dead.jpg');
     else:
         image= Image.open('img/jesus_is_cool.jpg');

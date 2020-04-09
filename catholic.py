@@ -151,14 +151,23 @@ def fetch_readings_api():
 
 def fetch_readings():
     # return fetch_readings_scrape()[0];
-    return fetch_readings_api();
+    # return fetch_readings_api();
+    # DEBUG!
+    results= fetch_readings_api();
+    results[1]= "Good Friday";
+    return results;
 
 def jesus(matrix, canvas):
 
     canvas.Clear();
 
+    (readings, title, season)= fetch_readings();
+
     # open the file with the picture
-    image= Image.open('img/jesus_is_cool.jpg');
+    if "good friday" is in title.lower():
+        image= Image.open('img/jesus_is_dead.jpg');
+    else:
+        image= Image.open('img/jesus_is_cool.jpg');
     (img_width, img_height)= image.size;
 
     # convert to fit the thing
@@ -211,7 +220,11 @@ def readings_pager(matrix, canvas):
     (readings, title, season)= fetch_readings();
 
     # change based on liturgical season
-    if 'ordinary' in season.lower():
+    if "good friday" in title.lower():
+        c_bg= {'r': 0, 'g': 0, 'b': 0};
+        c_text= {'r': 255, 'g': 255, 'b': 255};
+        c_head= {'r': 255, 'g': 255, 'b': 255};
+    elif 'ordinary' in season.lower():
         c_bg= {'r': 3, 'g': 76, 'b': 44};
         c_text= {'r': 255, 'g': 235, 'b': 59};
         c_head= {'r': 155, 'g': 41, 'b': 21};
